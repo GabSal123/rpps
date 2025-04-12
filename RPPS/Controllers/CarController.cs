@@ -23,5 +23,11 @@ namespace RPPS.Controllers
             Car car = Car.GetCar(carId);
             return Ok(car);
         }
+
+        [HttpPut]
+        public IActionResult ChangeState(int carId, int state) {
+            Car.ChangeState(carId, state);
+            return Ok();
+        }
     }
 }

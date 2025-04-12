@@ -1,35 +1,41 @@
 import { useEffect, useState } from 'react'
 import CarHandler from '../Handlers/CarHandler'
 import './CarListStyles.css'
-import { useParams } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
+import { useCustomRouter } from '../Handlers/useCustomRouter'
+import OrderHandler from '../Handlers/OrderHandler'
+import CargoHandler from '../Handlers/CargoHandler'
 
 const CarList = () => {
+  const location = useLocation()
+  const { finishOrderCreation } = useCustomRouter()
+
+  const selectedCargoIds = location.state?.selectedCargoIds || []
+  const typeOfCargo = location.state?.typeOfCargo || null
   const [cars, setCars] = useState([])
-  const { carId } = useParams()
-  const [selectedCarId, setSelectedCarId] = useState(carId)
-  const navigate = useNavigate()
-  const { orderType } = useParams()
+  const [selectedCarId, selectCar] = useState(null)
+
 
 
   useEffect(() => {
-    console.log(orderType)
-    CarHandler.getAllCars(orderType).then(
+    CarHandler.getAllCars(typeOfCargo).then(
       fetchedCars => {
-        console.log(fetchedCars)
         setCars(fetchedCars)
       }
     )
         
   }, [])
 
-  const handleSubmit = () => {
-      navigate('/cargos') 
+  const submitCar = () => {
+    OrderHandler.createOrder(selectedCarId, selectedCargoIds, typeOfCargo)
+    .then(orderId => CargoHandler.assingCargos(orderId, selectedCargoIds)).then(temp => console.log(temp))
 
+    CarHandler.changeCarState(selectedCarId, 4)
+    finishOrderCreation()
   }
 
-  const handleSelect = (event) => {
-    setSelectedCarId(event.target.value)
+  const handleSelectCar = (event) => {
+    selectCar(event.target.value)
   }
 
   return (
@@ -46,7 +52,7 @@ const CarList = () => {
                 name="selectedCar"
                 value={car.id}
                 checked={selectedCarId === String(car.id)}
-                onChange={handleSelect}
+                onChange={handleSelectCar}
                 className="car-list-radio"
               />
               <span className="car-list-info">
@@ -66,7 +72,7 @@ const CarList = () => {
 
       <button
         className="submit-button"
-        onClick={handleSubmit}
+        onClick={submitCar}
         disabled={!selectedCarId}
       >
         Submit Car

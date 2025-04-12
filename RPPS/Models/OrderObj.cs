@@ -13,6 +13,7 @@ namespace RPPS.Models
         public bool InProgress { get; set; }
         public int PlannerId { get; set; }
         public int Type { get; set; }
+        public List<int> selectedCargoIds { get; set; }
 
 
 
@@ -50,6 +51,31 @@ namespace RPPS.Models
             }
 
             return orders;
+        }
+
+        public static int Create(OrderObj order)
+        {
+            using var connection = new MySqlConnection(_connectionString);
+            connection.Open();
+
+            using var command = new MySqlCommand(@"
+            INSERT INTO orderobj (CargoCount, LeftToCompleteCargoCount, CarId, Done, InProgress, PlannerId)
+            VALUES (@CargoCount, @LeftToCompleteCargoCount, @CarId, @Done, @InProgress, @PlannerId); SELECT LAST_INSERT_ID();", connection);
+            Console.WriteLine(order.CargoCount);
+            Console.WriteLine(order.LeftToCompleteCargoCount);
+            Console.WriteLine(order.CarId);
+            Console.WriteLine(order.Done);
+            Console.WriteLine(order.InProgress);
+            Console.WriteLine(order.PlannerId);
+            command.Parameters.AddWithValue("@CargoCount", order.CargoCount);
+            command.Parameters.AddWithValue("@LeftToCompleteCargoCount", order.LeftToCompleteCargoCount);
+            command.Parameters.AddWithValue("@CarId", order.CarId);
+            command.Parameters.AddWithValue("@Done", order.Done);
+            command.Parameters.AddWithValue("@InProgress", order.InProgress);
+            command.Parameters.AddWithValue("@PlannerId", order.PlannerId);
+
+            int insertedId = Convert.ToInt32(command.ExecuteScalar());
+            return insertedId;
         }
     }
 }

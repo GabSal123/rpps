@@ -12,18 +12,31 @@ namespace RPPS.Controllers
             
             List<OrderObj> orders = OrderObj.GetAllOrders();
 
-            foreach (OrderObj order in orders)
-            {
-                order.Type = GetOrderType(order.Id);
-
-            }
             return Ok(orders)
 ;
         }
+        private static bool ValidOrder(OrderObj order) {
 
+            return true;
+        }
+
+        [HttpPost]
+        public IActionResult Create([FromBody] OrderObj order) {
+            foreach (var i in order.selectedCargoIds) {
+                Console.WriteLine(i);
+            }
+            Console.Write(order.CarId);
+
+            if (ValidOrder(order))
+            {
+                int orderId = OrderObj.Create(order);
+                return Ok(orderId);
+            }
+            return BadRequest();
+        }
         private static int GetOrderType(int orderId)
         {
-            List<CargoObj> cargoList = CargoObj.GetAllCargo(orderId);
+            List<CargoObj> cargoList = CargoObj.GetAllCargoOfOrder(orderId);
 
             return cargoList[0].Type;
         }   

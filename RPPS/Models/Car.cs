@@ -120,5 +120,16 @@ namespace RPPS.Models
 
             return cars;
         }
+
+        public static void ChangeState(int carId, int state) {
+            using var connection = new MySqlConnection(_connectionString);
+            connection.Open();
+
+            using var command = new MySqlCommand("UPDATE car SET state = @state WHERE id = @id", connection);
+            command.Parameters.AddWithValue("@id", carId);
+            command.Parameters.AddWithValue("@state", state);
+            command.ExecuteNonQuery();
+            
+        }
     }
 }

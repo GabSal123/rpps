@@ -3,8 +3,10 @@ import axios from 'axios'
 import './OrderListStyles.css'
 import OrderHandler from '../Handlers/OrderHandler'
 import { useNavigate } from 'react-router-dom'
+import { useCustomRouter } from '../Handlers/useCustomRouter'
 
 const OrderList = () => {
+  const {showCargos} = useCustomRouter()
   const [orders, setOrders] = useState([])
   const navigate = useNavigate()
 
@@ -18,10 +20,8 @@ const OrderList = () => {
         
   }, [])
 
- 
-
-  const handleOrderClick = (type,id) => {
-    navigate(`/orders/${type}/select-car/${id}`)
+  const createOrder = () => {
+    showCargos()
   }
 
   return (
@@ -31,7 +31,6 @@ const OrderList = () => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>type</th>
             <th>Cargo Count</th>
             <th>Left</th>
             <th>Car ID</th>
@@ -46,11 +45,10 @@ const OrderList = () => {
             <tr
               key={order.id}
               className="order-row"
-              onClick={() => handleOrderClick(order.type, order.id)}
               style={{ cursor: 'pointer' }}
+              disabled = {true}
             >
               <td>{order.id}</td>
-              <td>{order.type}</td>
               <td>{order.cargoCount}</td>
               <td>{order.leftToCompleteCargoCount}</td>
               <td>{order.carId}</td>
@@ -61,7 +59,12 @@ const OrderList = () => {
           ))}
         </tbody>
       </table>
-
+      <button
+        className="submit-button"
+        onClick={()=>createOrder()}
+      >
+        Sukurti uzsakyma
+      </button>
     </div>
   )
 }
