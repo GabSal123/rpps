@@ -63,7 +63,7 @@ const OrderList = () => {
         className="submit-button"
         onClick={()=>createOrder()}
       >
-        Sukurti uzsakyma
+        Create Order
       </button>
     </div>
   )

@@ -110,7 +110,7 @@ const CargoList = () => {
         onClick={submitCargo}
         disabled={!selectedType}
       >
-        Submit Car
+        Submit Cargos
       </button>
     </div>
   )
