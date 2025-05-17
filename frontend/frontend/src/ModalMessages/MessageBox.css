@@ -1,0 +1,36 @@
+.message-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 16px;
+  color: white;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.message-banner.success {
+  background-color: #4CAF50;
+}
+
+.message-banner.error {
+  background-color: #f44336;
+}
+
+.message-banner.info {
+  background-color: #2196F3;
+}
+
+.close-button {
+  position: absolute;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}

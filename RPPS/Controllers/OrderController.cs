@@ -20,6 +20,56 @@ namespace RPPS.Controllers
             return true;
         }
 
+        [HttpGet]
+        [Route("GetOne")]
+        public IActionResult Get(int id)
+        {
+            int carId = OrderObj.GetOrder(id).CarId;
+            return Ok(carId);
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            int carId = OrderObj.GetOrder(id).CarId;
+            if(carId == 0)
+            {
+                return NotFound("No car");
+            }
+            bool deleted = OrderObj.Delete(id);
+            if (deleted)
+            {
+                CargoObj.FreeCargosFromOrder(id);
+                Car.ChangeState(carId, 1);
+                return Ok("Deleted!");
+            }
+            else {
+                return BadRequest(":(");
+            }
+        }
+
+        [HttpPut]
+        [Route("Update")]
+        public IActionResult UpdateOrderCarIdAndCargoCount(int orderId, int newCarId, int cargoCount) {
+            var order = OrderObj.GetOrder(orderId);
+            int carId = order.CarId;
+            if (carId == 0)
+            {
+                return NotFound("No car");
+            }
+            Car.ChangeState(carId, 1);
+
+            CargoObj.FreeCargosFromOrder(orderId);
+
+            Car.ChangeState(newCarId, 4);
+
+            OrderObj.ChangeOrderCarId(orderId, newCarId);
+
+            OrderObj.ChangeCargoCount(orderId, cargoCount);
+
+            return Ok(order.Id);
+        }
+
         [HttpPost]
         public IActionResult Create([FromBody] OrderObj order) {
             foreach (var i in order.selectedCargoIds) {

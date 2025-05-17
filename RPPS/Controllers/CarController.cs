@@ -15,11 +15,20 @@ namespace RPPS.Controllers
             List<Car> cars = Car.GetAllCars(orderType);
             return Ok(cars);
         }
-
+        
         [HttpGet]
         public IActionResult Get(int carId)
         {
 
+            Car car = Car.GetCar(carId);
+            return Ok(car);
+        }
+
+        [HttpGet]
+        [Route("FromOrder")]
+        public IActionResult GetCarFromOrder(int orderId)
+        {
+            int carId = OrderObj.GetOrder(orderId).CarId;
             Car car = Car.GetCar(carId);
             return Ok(car);
         }

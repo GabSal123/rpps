@@ -14,5 +14,9 @@ const assingCargos = (orderId, selectedCarId) => {
     axios.put("https://localhost:7257/Cargo", obj)
 }
 
+const getOrderCargos = (orderId) => {
+    const request = axios.get(`https://localhost:7257/Cargo/CargosOfOrder?orderId=${orderId}`)
+    return request.then(response => response.data)
+}
 
-export default {getFreeCargos, assingCargos}
+export default {getFreeCargos, assingCargos, getOrderCargos}

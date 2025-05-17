@@ -16,6 +16,13 @@ namespace RPPS.Controllers
             return Ok(cargos)
 ;
         }
+        [HttpGet]
+        [Route("CargosOfOrder")]
+        public IActionResult GetSelectedCargos(int orderId) {
+            List<CargoObj> cargos = CargoObj.GetOrderCargos(orderId);
+            return Ok(cargos);
+
+        }
 
         [HttpPut]
         public IActionResult AssignToOrder(CargoAssignmentRequest obj) {
