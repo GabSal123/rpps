@@ -9,7 +9,7 @@ const CargoList = () => {
   const [cargos, setCargos] = useState([])
   const [selectedIds, setSelectedIds] = useState([])
   const [selectedType, setSelectedType] = useState(null)
-  const [markers, setMarkers] = useState([]) // Stores selected cargos' coordinates
+  const [markers, setMarkers] = useState([])
   const { goToCarSelection } = useCustomRouter()
 
   useEffect(() => {
@@ -23,35 +23,65 @@ const CargoList = () => {
   }
 
   const selectCargo = (cargoId, type, coordinates) => {
-    const updatedSelectedIds = [...selectedIds]
+    const updatedSelectedIds = [...selectedIds];
+    const index = updatedSelectedIds.indexOf(cargoId);
 
-    const index = updatedSelectedIds.indexOf(cargoId)
     if (index > -1) {
-      updatedSelectedIds.splice(index, 1)
-      setMarkers(markers.filter(marker => marker.id !== cargoId)) // Remove marker
+      updatedSelectedIds.splice(index, 1);
+      setMarkers(markers.filter(marker => marker.id !== cargoId));
     } else {
-      updatedSelectedIds.push(cargoId)
-      setMarkers([...markers, { id: cargoId, ...coordinates }]) // Add marker
+      updatedSelectedIds.push(cargoId);
+      setMarkers([...markers, { id: cargoId, ...coordinates }]);
     }
 
-    setSelectedIds(updatedSelectedIds)
-    setSelectedType(type)
+    setSelectedIds(updatedSelectedIds);
+    setSelectedType(type);
 
     if (updatedSelectedIds.length === 0) {
-      setSelectedType(null)
+      setSelectedType(null);
     }
-  }
+};
+
 
   const generateMapUrl = () => {
-    const baseUrl = "https://www.google.com/maps/embed/v1/directions?key=API_KEY";
-    const originPlaceId = "ChIJYUZqKZat4EYR5lUU8K0vl4I";
-    const destinationPlaceId = "ChIJQ9NnsXAi50YRvIs3x-DRS2E";
-    let markersStr = markers
-      .map(marker => `&waypoints=${marker.startCoordinateX},${marker.startCoordinateY}`)
-      .join('');
+    if (markers.length < 1) return '';
 
-    return `${baseUrl}&origin=place_id:${originPlaceId}&destination=place_id:${destinationPlaceId}${markersStr}`;
-  }
+    // Sort markers consistently using selectedIds to maintain intended order
+    const orderedMarkers = selectedIds
+      .map(id => markers.find(marker => marker.id === id))
+      .filter(Boolean); // Filter out any nulls (in case of desync)
+
+    if (orderedMarkers.length < 1) return '';
+
+    const origin = `${orderedMarkers[0].startCoordinateX},${orderedMarkers[0].startCoordinateY}`;
+    const destination = `${orderedMarkers[orderedMarkers.length - 1].endCoordinateX},${orderedMarkers[orderedMarkers.length - 1].endCoordinateY}`;
+
+    const waypointCoords = [];
+
+    // Include start and end of all cargos *except* first and last (handled as origin/destination)
+    for (let i = 0; i < orderedMarkers.length; i++) {
+      const marker = orderedMarkers[i];
+
+      const isFirst = i === 0;
+      const isLast = i === orderedMarkers.length - 1;
+
+      if (!isFirst) {
+        waypointCoords.push(`${marker.startCoordinateX},${marker.startCoordinateY}`);
+      }
+
+      if (!isLast) {
+        waypointCoords.push(`${marker.endCoordinateX},${marker.endCoordinateY}`);
+      }
+    }
+
+    const waypoints = waypointCoords.join('|');
+
+    const baseUrl = "https://www.google.com/maps/embed/v1/directions";
+    const apiKey = "API_KEY";
+
+    return `${baseUrl}?key=${apiKey}&origin=${origin}&destination=${destination}${waypoints ? `&waypoints=${waypoints}` : ''}`;
+};
+
 
   return (
     <div className="cargo-list-container">
@@ -67,14 +97,18 @@ const CargoList = () => {
             <th>Quantity</th>
             <th>Type</th>
             <th>City</th>
+            <th>Destination City</th>
           </tr>
         </thead>
         <tbody>
           {cargos.map(cargo => {
-            const cargoCoordinates = { 
-              startCoordinateX: cargo.startCoordinateX, 
-              startCoordinateY: cargo.startCoordinateY 
-            };
+           const cargoCoordinates = {
+            startCoordinateX: cargo.startCoordinateX,
+            startCoordinateY: cargo.startCoordinateY,
+            endCoordinateX: cargo.endCoordinateX,
+            endCoordinateY: cargo.endCoordinateY
+          };
+
 
             return (
               <tr
@@ -96,6 +130,7 @@ const CargoList = () => {
                 <td>{cargo.quantity}</td>
                 <td>{cargo.type}</td>
                 <td>{cargo.city}</td>
+                <td>{cargo.destinationCity}</td>
               </tr>
             )
           })}
@@ -103,7 +138,7 @@ const CargoList = () => {
       </table>
 
       {/* Google Maps iframe showing selected cargos */}
-      {markers.length >= 2 && (
+      {markers.length >= 1 && (
       <iframe
         width="600"
         height="450"
@@ -113,8 +148,6 @@ const CargoList = () => {
         src={generateMapUrl()}
       ></iframe>
 )}
-
-
       <p></p>
       <button
         className="submit-button"
