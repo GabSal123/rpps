@@ -12,6 +12,7 @@ const CargoList = () => {
   const { goToCarSelection } = useCustomRouter()
 
   useEffect(() => {
+
     CargoHandler.getFreeCargos().then(fetchedCargos=>{setCargos(fetchedCargos)})
   },[])
 
@@ -34,8 +35,6 @@ const CargoList = () => {
     if(updatedSelectedIds.length == 0){
       setSelectedType(null)
     }
-    
-    
   }
 
   return (
@@ -51,6 +50,7 @@ const CargoList = () => {
             <th>Weight</th>
             <th>Quantity</th>
             <th>Type</th>
+            <th>City</th>
           </tr>
         </thead>
         <tbody>
@@ -76,6 +76,7 @@ const CargoList = () => {
                   <td>{cargo.weight}</td>
                   <td>{cargo.quantity}</td>
                   <td>{cargo.type}</td>
+                  <td>{cargo.city}</td>
                 </tr>
               )
             }else if (selectedType == cargo.type){
@@ -99,12 +100,22 @@ const CargoList = () => {
                   <td>{cargo.weight}</td>
                   <td>{cargo.quantity}</td>
                   <td>{cargo.type}</td>
+                  <td>{cargo.city}</td>
                 </tr>
               )
             }
             })}
         </tbody>
       </table>
+      <iframe 
+        width="600" 
+        height="450" 
+        style={{ marginRight: '2em' }} 
+        loading="lazy" 
+        allowFullScreen 
+        src="https://www.google.com/maps/embed/v1/directions?origin=place_id:ChIJYUZqKZat4EYR5lUU8K0vl4I&destination=place_id:ChIJQ9NnsXAi50YRvIs3x-DRS2E&key=API_Key">
+      </iframe>
+      <p></p> 
       <button
         className="submit-button"
         onClick={submitCargo}
