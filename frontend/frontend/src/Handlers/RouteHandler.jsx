@@ -1,29 +1,4 @@
-// RouteHandler.js
-let selectedIds = [];
-let selectedType = null;
-let markers = [];
-
-const selectCargo = (cargoId, type, coordinates) => {
-  const updatedSelectedIds = [...selectedIds];
-  const index = updatedSelectedIds.indexOf(cargoId);
-
-  if (index > -1) {
-    updatedSelectedIds.splice(index, 1);
-    markers = markers.filter(marker => marker.id !== cargoId);
-  } else {
-    updatedSelectedIds.push(cargoId);
-    markers = [...markers, { id: cargoId, ...coordinates }];
-  }
-
-  selectedIds = updatedSelectedIds;
-  selectedType = updatedSelectedIds.length > 0 ? type : null;
-};
-
-const getSelectedIds = () => selectedIds;
-const getSelectedType = () => selectedType;
-const getMarkers = () => markers;
-
-const generateMapUrl = () => {
+const generateMapUrl = (markers, selectedIds, selectedType) => {
   if (markers.length < 1) return '';
 
   const orderedMarkers = selectedIds
@@ -54,15 +29,11 @@ const generateMapUrl = () => {
   const waypoints = waypointCoords.join('|');
 
   const baseUrl = "https://www.google.com/maps/embed/v1/directions";
-  const apiKey = "API_KEY";
+  const apiKey = "AIzaSyB90ez86DtlLQU3ZL9YKHD3ZPAq_fh-u28";
 
   return `${baseUrl}?key=${apiKey}&origin=${origin}&destination=${destination}${waypoints ? `&waypoints=${waypoints}` : ''}`;
 };
 
 export default {
-  selectCargo,
   generateMapUrl,
-  getSelectedIds,
-  getSelectedType,
-  getMarkers,
 };

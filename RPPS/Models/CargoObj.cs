@@ -148,7 +148,7 @@ namespace RPPS.Models
 
 
             using var command = new MySqlCommand(
-                "SELECT id, width, volume, weight, quantity, type, startDate, endDate, cost, Country, City, " +
+                "SELECT id, width, volume, weight, quantity, type, startDate, endDate, cost, Country, City, DestinationCity, " +
                 "startCoordinateX, startCoordinateY, endCoordinateX, endCoordinateY, approved, payed, done, " +
                 $"CanceledReason, orderid, customerid, plannerId FROM cargoobj WHERE orderid = @OrderId", connection);
 
@@ -171,17 +171,19 @@ namespace RPPS.Models
                     Cost = reader.GetDecimal(8),
                     Country = reader.GetString(9),
                     City = reader.GetString(10),
-                    StartCoordinateX = reader.GetInt32(11),
-                    StartCoordinateY = reader.GetInt32(12),
-                    EndCoordinateX = reader.GetInt32(13),
-                    EndCoordinateY = reader.GetInt32(14),
-                    Approved = reader.GetBoolean(15),
-                    Payed = reader.GetBoolean(16),
-                    Done = reader.GetBoolean(17),
-                    CanceledReason = reader.GetString(18),
-                    OrderId = reader.GetInt32(19),
-                    CustomerId = reader.GetInt32(20),
-                    PlannerId = reader.GetInt32(21)
+                    DestinationCity = reader.GetString(11),
+                    StartCoordinateX = reader.GetFloat(12),
+
+                    StartCoordinateY = reader.GetFloat(13),
+                    EndCoordinateX = reader.GetFloat(14),
+                    EndCoordinateY = reader.GetFloat(15),
+                    Approved = reader.GetBoolean(16),
+                    Payed = reader.GetBoolean(17),
+                    Done = reader.GetBoolean(18),
+                    CanceledReason = reader.GetString(19),
+                    OrderId = reader.GetInt32(20),
+                    CustomerId = reader.GetInt32(21),
+                    PlannerId = reader.GetInt32(22)
                 });
             }
 
