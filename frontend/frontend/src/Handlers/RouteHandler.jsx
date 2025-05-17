@@ -54,7 +54,7 @@ const generateMapUrl = () => {
   const waypoints = waypointCoords.join('|');
 
   const baseUrl = "https://www.google.com/maps/embed/v1/directions";
-  const apiKey = "AIzaSyDe_O6FW9XTvqX_djp7tFjC_8T4eKpYCzM";
+  const apiKey = "API_KEY";
 
   return `${baseUrl}?key=${apiKey}&origin=${origin}&destination=${destination}${waypoints ? `&waypoints=${waypoints}` : ''}`;
 };
