@@ -29,7 +29,7 @@ const generateMapUrl = (markers, selectedIds, selectedType) => {
   const waypoints = waypointCoords.join('|');
 
   const baseUrl = "https://www.google.com/maps/embed/v1/directions";
-  const apiKey = "AIzaSyB90ez86DtlLQU3ZL9YKHD3ZPAq_fh-u28";
+  const apiKey = "Non";
 
   return `${baseUrl}?key=${apiKey}&origin=${origin}&destination=${destination}${waypoints ? `&waypoints=${waypoints}` : ''}`;
 };
