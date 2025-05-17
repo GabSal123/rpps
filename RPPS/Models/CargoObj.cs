@@ -20,10 +20,10 @@ namespace RPPS.Models
         public decimal Cost { get; set; }
         public string Country { get; set; }
         public string City { get; set; }
-        public int StartCoordinateX { get; set; }
-        public int StartCoordinateY { get; set; }
-        public int EndCoordinateX { get; set; }
-        public int EndCoordinateY { get; set; }
+        public float StartCoordinateX { get; set; }
+        public float StartCoordinateY { get; set; }
+        public float EndCoordinateX { get; set; }
+        public float EndCoordinateY { get; set; }
         public bool Approved { get; set; }
         public bool Payed { get; set; }
         public bool Done { get; set; }
@@ -69,10 +69,10 @@ namespace RPPS.Models
                     Cost = reader.GetDecimal(8),
                     Country = reader.GetString(9),
                     City = reader.GetString(10),
-                    StartCoordinateX = reader.GetInt32(11),
-                    StartCoordinateY = reader.GetInt32(12),
-                    EndCoordinateX = reader.GetInt32(13),
-                    EndCoordinateY = reader.GetInt32(14),
+                    StartCoordinateX = reader.GetFloat(11),
+                    StartCoordinateY = reader.GetFloat(12),
+                    EndCoordinateX = reader.GetFloat(13),
+                    EndCoordinateY = reader.GetFloat(14),
                     Approved = reader.GetBoolean(15),
                     Payed = reader.GetBoolean(16),
                     Done = reader.GetBoolean(17),
@@ -81,6 +81,9 @@ namespace RPPS.Models
                     CustomerId = reader.GetInt32(20),
                     PlannerId = reader.GetInt32(21)
                 });
+            }
+            for(int i=0; i<cargos.Count;i++){
+                Console.WriteLine(cargos[i].StartCoordinateX);
             }
 
             return cargos;
@@ -116,10 +119,10 @@ namespace RPPS.Models
                     Cost = reader.GetDecimal(8),
                     Country = reader.GetString(9),
                     City = reader.GetString(10),
-                    StartCoordinateX = reader.GetInt32(11),
-                    StartCoordinateY = reader.GetInt32(12),
-                    EndCoordinateX = reader.GetInt32(13),
-                    EndCoordinateY = reader.GetInt32(14),
+                    StartCoordinateX = reader.GetFloat(11),
+                    StartCoordinateY = reader.GetFloat(12),
+                    EndCoordinateX = reader.GetFloat(13),
+                    EndCoordinateY = reader.GetFloat(14),
                     Approved = reader.GetBoolean(15),
                     Payed = reader.GetBoolean(16),
                     Done = reader.GetBoolean(17),
